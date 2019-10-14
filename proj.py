@@ -4,10 +4,6 @@ import numpy as np
 import pandas as pd
 import math
 
-delta = 10e-5
-res = 0.2
-margin = 0.2
-min_dist = 10e-2/5
 class Minimizer:
     def __init__(self, f, inputs, x_0 = np.array([0,0]), alpha = 0.1):
         self.f = f
@@ -156,7 +152,7 @@ for i in range(2000):
         break
     st = mim.step(method='newton')
     print(st)
-#print('x_%d = [%d,%d], f(x_%d) = %d, grad_f(x_%d) =' % (iter, x[0].item(), x[1].item(), iter, min.f(x).item(), iter), min.f_grad(x))
+
 vet_f = np.vectorize(lambda in1, in2: f((in1, in2)))
 drawer = Drawer()
 drawer.draw_f(vet_f, mim)
