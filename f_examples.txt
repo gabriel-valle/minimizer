@@ -1,0 +1,76 @@
+# f(x, y) = x² + y²
+def f(entry):
+    x, y = entry[0], entry[1]
+    return x**2+y**2
+def grad_f(entry):
+    x, y = entry[0], entry[1]
+    return np.array([2*x, 2*y])
+def hess_f(entry):
+    #x, y = entry[0], entry[1]
+    return np.array([[2,0],[0,2]])
+
+# f(x, y) = 5x² + y²
+def f(entry):
+    x, y = entry[0], entry[1]
+    return 5*x**2+y**2
+def grad_f(entry):
+    x, y = entry[0], entry[1]
+    return np.array([10*x, 2*y])
+def hess_f(entry):
+    #x, y = entry[0], entry[1]
+    return np.array([[10,0],[0,2]])
+
+# f(x, y) = 5x⁴ + y²
+def f(entry):
+    x, y = entry[0], entry[1]
+    return 5*x**4+y**2
+def grad_f(entry):
+    x, y = entry[0], entry[1]
+    return np.array([20*x**3, 2*y])
+def hess_f(entry):
+    x, y = entry[0], entry[1]
+    return np.array([[60*x**2,0],[0,2]])
+
+# f(x_1, x_2) = x_1³ - x_1*x_2² - 2*x_2² - 3*x_1 (obs.: no global minimum)
+def f(entry):
+    x_1, x_2 = entry[0], entry[1]
+    return x_1**3 - x_1*x_2**2 - 2*x_2**2 - 3*x_1
+def grad_f(entry):
+    x_1, x_2 = entry[0], entry[1]
+    return np.array([3*x_1**2 - x_2**2 - 3, -2*x_1*x_2 - 4*x_2])
+def hess_f(entry):
+    x_1, x_2 = entry[0], entry[1]
+    return np.array([[6*x_1, -2*x_2],[-2*x_2,-2*x_1-4]])
+
+# f(x, y) = x⁴ + y⁴ (global minimum at (0,0))
+def f(entry):
+    x, y = entry[0], entry[1]
+    return x**4+y**4
+def grad_f(entry):
+    x, y = entry[0], entry[1]
+    return np.array([4*x**3, 4*y**3])
+def hess_f(entry):
+    #x, y = entry[0], entry[1]
+    return np.array([[12*x**2,0],[0,12*y**2]])
+
+# f(x_1, x_2) = x_1³ - 3*x_1 + x_2³ (obs.: no global minimum)
+def f(entry):
+    x_1, x_2 = entry[0], entry[1]
+    return x_1**3-3*x_1+x_2**3
+def grad_f(entry):
+    x_1, x_2 = entry[0], entry[1]
+    return np.array([3*x_1**2-3, 3*x_2**2])
+def hess_f(entry):
+    x_1, x_2 = entry[0], entry[1]
+    return 6*np.array([[x_1, 0],[0, x_2]])
+
+# f(x, y) = 100(y-x²)² + (1-x)²
+def f(entry):
+    x, y = entry[0], entry[1]
+    return 100*(y-x**2)**2 + (1-x)**2
+def grad_f(entry):
+    x, y = entry[0], entry[1]
+    return np.array([2*(200*x**3-200*x*y+x-1), 200*(y-x**2)])
+def hess_f(entry):
+    x, y = entry[0], entry[1]
+    return np.array([[-400*(y-x**2)+800*x**2+2, -400*x],[-400*x, 200]])
