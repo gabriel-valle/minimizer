@@ -144,51 +144,6 @@ def hess_f(entry):
     x, y = entry[0], entry[1]
     return np.array([[-400*(y-x**2)+800*x**2+2, -400*x],[-400*x, 200]])
 
-def draw_f(vet_f, mim):
-    xs = list(map(lambda inp: inp[0], mim.x))
-    ys = list(map(lambda inp: inp[1], mim.x))
-    x_low, x_high = min(xs), max(xs)
-    y_low, y_high = min(ys), max(ys)
-    rangex, rangey = max(abs(x_low), abs(x_high)), max(abs(y_low), abs(y_high))
-    rangex *= 1+margin
-    rangey *= 1+margin
-    print(rangex, rangey)
-    X = np.arange(-rangex, rangex+res, res)
-    Y = np.arange(-rangey, rangey+res, res)
-    X, Y = np.meshgrid(X, Y)
-    Z = vet_f(X, Y)
-    print(X,Y)
-    fig = go.Figure(data=[go.Surface(x = X, y = Y, z = Z, opacity=0.8)])
-    fig.update_layout(title='Function', autosize=True,
-                  width=1000, height=1000,
-                  margin=dict(l=65, r=50, b=65, t=90))
-    return fig
-
-def draw_path(vet_f, mim, fig, X_0, X_f, color='darkblue'):
-    #print(X_0, X_f)
-    #X_line = np.arange(X_0[0], X_f[0], res/4)
-    #Y_line = np.arange(X_0[1], X_f[1], res/4)
-    path = []
-    norm = np.linalg.norm(X_f-X_0)
-    steps = math.ceil(4*norm.item()/res)
-    for t in range(0,steps+1):
-        vet = X_0 + (t/steps)*(X_f-X_0)
-        path.append(list(vet))
-    path = np.array(path)
-    X_line = np.array(list(map(lambda entry: entry[0], path)))
-    Y_line = np.array(list(map(lambda entry: entry[1], path)))
-    #print(X_line, Y_line)
-    Z_line = vet_f(X_line, Y_line)
-    fig.add_trace(go.Scatter3d(x=X_line, y=Y_line, z=Z_line, mode='lines',
-        line=dict(
-            #color=(color+np.sqrt(X_line**2+Y_line**2))/10,
-            color='darkblue',
-            #colorscale='Viridis',
-            width=10
-        ))
-    )
-    return fig
-
 mim = Minimizer(f, 2, np.array([0, 0]))
 mim.f_grad = grad_f
 mim.f_hess = hess_f
