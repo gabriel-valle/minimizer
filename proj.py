@@ -103,16 +103,7 @@ def hess_f(entry):
 mim = mini.Minimizer(f, 2, np.array([0, 0]))
 mim.f_grad = grad_f
 mim.f_hess = hess_f
-
-for i in range(2000):
-    iter = len(mim.x) - 1
-    x = mim.x[-1]
-    print('x_%d = [%f,%f], f(x_%d) = %f, grad_f(x_%d) =' % (iter, round(x[0].item(),4), round(x[1].item(),4), iter, round(mim.f(x).item(), 4), iter), mim.f_grad(x))
-    if np.linalg.norm(mim.f_grad(mim.x[-1])) < delta:
-        break
-    st = mim.step(method=method)
-    print(st)
-
+mim.iterate(method='newton', log=True)
 vet_f = np.vectorize(lambda in1, in2: f((in1, in2)))
 drawer = Drawer()
 drawer.draw_f(vet_f, mim)
