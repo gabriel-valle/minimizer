@@ -89,16 +89,19 @@ class Drawer:
         self.res = 0.2
         self.margin = 0.2
         self.min_dist = 10e-2/5
+        self.view_area = None
     def draw_f(self, vet_f, mim):
         xs = list(map(lambda inp: inp[0], mim.x))
         ys = list(map(lambda inp: inp[1], mim.x))
-        x_low, x_high = min(xs), max(xs)
-        y_low, y_high = min(ys), max(ys)
-        rangex, rangey = max(abs(x_low), abs(x_high)), max(abs(y_low), abs(y_high))
-        rangex *= 1+self.margin
-        rangey *= 1+self.margin
-        X = np.arange(-rangex, rangex+self.res, self.res)
-        Y = np.arange(-rangey, rangey+self.res, self.res)
+        if self.view_area == None:
+            x_low, x_high = min(xs), max(xs)
+            y_low, y_high = min(ys), max(ys)
+            rangex, rangey = max(abs(x_low), abs(x_high)), max(abs(y_low), abs(y_high))
+            rangex *= 1+self.margin
+            rangey *= 1+self.margin
+            view_area = [[-rangex, -rangey],[rangex, rangey]]
+        X = np.arange(view_area[0][0], view_area[1][0]+self.res, self.res)
+        Y = np.arange(view_area[0][1], view_area[1][1]+self.res, self.res)
         X, Y = np.meshgrid(X, Y)
         Z = vet_f(X, Y)
         surface = go.Figure(data=[go.Surface(x = X, y = Y, z = Z, opacity=0.8)])
