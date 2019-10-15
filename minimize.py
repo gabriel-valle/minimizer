@@ -28,7 +28,6 @@ class Minimizer:
         x = self.x[-1]
         direction = -self.f_grad(x)
         t = self.line_search(direction)
-        print('t =', t)
         self.steps.append(t*direction)
         self.x.append(self.x[-1]+self.steps[-1])
         return t*direction
@@ -138,7 +137,7 @@ class Drawer:
         Y_scatter = path[:, 1]
         Z_scatter = vet_f(X_scatter, Y_scatter)
         mark_colors = np.array([0.01*i for i in range(len(X_scatter))])
-        self.fig.add_trace(go.Scatter3d(x=X_scatter, y=Y_scatter, z=Z_scatter,
+        self.fig.add_trace(go.Scatter3d(x=X_scatter, y=Y_scatter, z=Z_scatter+0.2,
             marker=dict(
                 size=3,
                 color=mark_colors,
@@ -146,9 +145,7 @@ class Drawer:
                 opacity=0.8
             ),
             line=dict(
-                #color=(color+np.sqrt(X_line**2+Y_line**2))/10,
-                color='darkblue',
-                #colorscale='Viridis',
+                color=color,
                 width=10
             ))
         )
