@@ -161,21 +161,22 @@ for i in range(2000):
     print('x_%d = [%f,%f], f(x_%d) = %f, grad_f(x_%d) =' % (iter, round(x[0].item(),4), round(x[1].item(),4), iter, round(mim.f(x).item(), 4), iter), mim.f_grad(x))
     if np.linalg.norm(mim.f_grad(mim.x[-1])) < delta:
         break
-    st = mim.step(method='newton')
+    st = mim.step(method=method)
     print(st)
 
 vet_f = np.vectorize(lambda in1, in2: f((in1, in2)))
 drawer = Drawer()
 drawer.draw_f(vet_f, mim)
-count = 0
-i = 0
-while i in range(len(mim.x)-1):
-    j = i+1
-    while j!=len(mim.x)-1 and np.linalg.norm(mim.x[j] - mim.x[i]) < drawer.min_dist:
-        j+=1
-    drawer.draw_path(vet_f, mim, mim.x[i], mim.x[j], count)
-    count += np.linalg.norm(mim.x[j]-mim.x[i])
-    print('path', i, j, 'drawn')
-    i = j
+drawer.draw_path(vet_f, mim, mim.x)
+#count = 0
+#i = 0
+#while i in range(len(mim.x)-1):
+#    j = i+1
+#    while j!=len(mim.x)-1 and np.linalg.norm(mim.x[j] - mim.x[i]) < drawer.min_dist:
+#        j+=1
+#    drawer.draw_curve(vet_f, mim, mim.x[i], mim.x[j], count)
+#    count += np.linalg.norm(mim.x[j]-mim.x[i])
+#    print('path', i, j, 'drawn')
+#    i = j
 drawer.show()
 #fig.show()
