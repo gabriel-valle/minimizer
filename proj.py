@@ -3,7 +3,15 @@ import plotly.express as px
 import numpy as np
 import pandas as pd
 import math
+import sys
 
+delta = 10e-4
+if len(sys.argv) > 1:
+    method = sys.argv[1]
+else:
+    method = "newton"
+
+print('method:',method)
 class Minimizer:
     def __init__(self, f, inputs, x_0 = np.array([0,0]), alpha = 0.1):
         self.f = f
