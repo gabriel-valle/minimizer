@@ -113,7 +113,7 @@ class Drawer:
                     width=1000, height=1000,
                     margin=dict(l=65, r=50, b=65, t=90))
         return self.fig
-    def draw_path(self, vet_f, mim, X_0, X_f, color='darkblue'):
+    def draw_curve(self, vet_f, mim, X_0, X_f, color='darkblue'):
         path = []
         norm = np.linalg.norm(X_f-X_0)
         steps = math.ceil(4*norm.item()/self.res)
@@ -124,10 +124,29 @@ class Drawer:
             vet = X_0 + (t/steps)*(X_f-X_0)
             path.append(list(vet))
         path = np.array(path)
-        X_line = np.array(list(map(lambda entry: entry[0], path)))
-        Y_line = np.array(list(map(lambda entry: entry[1], path)))
+        X_line = path[:, 0]
+        Y_line = path[:, 1]
         Z_line = vet_f(X_line, Y_line)
         self.fig.add_trace(go.Scatter3d(x=X_line, y=Y_line, z=Z_line, mode='lines',
+            line=dict(
+                color='darkblue',
+                width=10
+            ))
+        )
+        return self.fig
+    def draw_path(self, vet_f, mim, path, color='darkblue'):
+        path = np.array(path)
+        X_scatter = path[:, 0]
+        Y_scatter = path[:, 1]
+        Z_scatter = vet_f(X_scatter, Y_scatter)
+        mark_colors = np.array([0.01*i for i in range(len(X_scatter))])
+        self.fig.add_trace(go.Scatter3d(x=X_scatter, y=Y_scatter, z=Z_scatter,
+            marker=dict(
+                size=2,
+                color=mark_colors,
+                colorscale='Viridis',
+                opacity=0.8
+            ),
             line=dict(
                 #color=(color+np.sqrt(X_line**2+Y_line**2))/10,
                 color='darkblue',
@@ -135,9 +154,8 @@ class Drawer:
                 width=10
             ))
         )
-        return self.fig
     def show(self):
-        self.fig.show()  
+        self.fig.show() 
 
 
 # f(x, y) = 100(y-x²)² + (1-x)²
