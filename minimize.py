@@ -18,9 +18,9 @@ class Minimizer:
         #Armijo condition
         while self.f(x + t*dr) >= self.f(x) + self.alpha*t*np.inner(self.f_grad(x), dr):
             if t == 0:
-                print(dr, f(x), self.alpha*t*np.inner(self.f_grad(x), dr))
+                print(dr, self.f(x), self.alpha*t*np.inner(self.f_grad(x), dr))
                 print('line_search failed')
-                break
+                return -1
             t /= 2
         return t
 
@@ -42,6 +42,8 @@ class Minimizer:
         x = self.x[-1]
         direction = np.linalg.solve(self.B[-1], -self.f_grad(x))
         t = self.line_search(direction)
+        if t == -1:
+            return -1
         step = t*direction
         self.steps.append(step)
         self.x.append(self.x[-1]+self.steps[-1])
