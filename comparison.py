@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import sys
 import minimize as mini
+import math
 
 # f(x, y) = 100(y-x²)² + (1-x)²
 def f(entry):
