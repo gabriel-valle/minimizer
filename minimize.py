@@ -87,9 +87,9 @@ class Minimizer:
 class Drawer:
     def __init__(self, res = 0.05, margin = 0.2, min_dist = 10e-2):
         self.fig = None
-        self.res = 0.2
-        self.margin = 0.2
-        self.min_dist = 10e-2/5
+        self.res = res
+        self.margin = margin
+        self.min_dist = min_dist
         self.view_area = None
     def draw_f(self, vet_f, mim):
         xs = list(map(lambda inp: inp[0], mim.x))
