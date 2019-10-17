@@ -100,9 +100,9 @@ class Drawer:
             rangex, rangey = max(abs(x_low), abs(x_high)), max(abs(y_low), abs(y_high))
             rangex *= 1+self.margin
             rangey *= 1+self.margin
-            view_area = [[-rangex, -rangey],[rangex, rangey]]
-        X = np.arange(view_area[0][0], view_area[1][0]+self.res, self.res)
-        Y = np.arange(view_area[0][1], view_area[1][1]+self.res, self.res)
+            self.view_area = [[-rangex, -rangey],[rangex, rangey]]
+        X = np.arange(self.view_area[0][0], self.view_area[1][0]+self.res, self.res)
+        Y = np.arange(self.view_area[0][1], self.view_area[1][1]+self.res, self.res)
         X, Y = np.meshgrid(X, Y)
         Z = vet_f(X, Y)
         surface = go.Figure(data=[go.Surface(x = X, y = Y, z = Z, opacity=0.8)])
