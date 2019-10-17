@@ -76,7 +76,9 @@ class Minimizer:
         for _ in range(2000):
             iter = len(self.x) - 1
             x = self.x[-1]
-            print('x_%d = [%f,%f], f(x_%d) = %f, grad_f(x_%d) =' % (iter, round(x[0].item(),4), round(x[1].item(),4), iter, round(self.f(x).item(), 4), iter), self.f_grad(x))
+            f_x = self.f(x)
+            grad = self.f_grad(x)
+            print('x_%d = [%f,%f], f(x_%d) = %f, grad_f(x_%d) =' % (iter, round(x[0].item(),4), round(x[1].item(),4), iter, round(f_x, 4), iter), grad)
             if np.linalg.norm(self.f_grad(self.x[-1])) < delta:
                 break
             st = self.step(method=method)
