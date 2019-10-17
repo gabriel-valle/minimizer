@@ -141,7 +141,7 @@ class Drawer:
         Y_scatter = path[:, 1]
         Z_scatter = vet_f(X_scatter, Y_scatter)
         mark_colors = np.array([0.01*i for i in range(len(X_scatter))])
-        self.fig.add_trace(go.Scatter3d(x=X_scatter, y=Y_scatter, z=Z_scatter+0.2,
+        self.fig.add_trace(go.Scatter3d(x=X_scatter, y=Y_scatter, z=Z_scatter,
             marker=dict(
                 size=3,
                 color=mark_colors,
