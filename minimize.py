@@ -135,7 +135,7 @@ class Drawer:
             ))
         )
         return self.fig
-    def draw_path(self, vet_f, mim, path, color='darkblue'):
+    def draw_path(self, vet_f, mim, path, color='darkblue', projection=False, density = 20):
         path = np.array(path)
         X_scatter = path[:, 0]
         Y_scatter = path[:, 1]
@@ -149,8 +149,13 @@ class Drawer:
                 opacity=0.8
             ),
             line=dict(
-                color=color,
-                width=10
+        if projection:
+            self.fig.add_trace(go.Scatter3d(x=X_scatter, y=Y_scatter, z=np.zeros(X_scatter.shape), mode='lines',
+                line=dict(
+                    color=color,
+                    width=10,
+                ), opacity=0.7)
+        )
             ))
         )
     def show(self):
