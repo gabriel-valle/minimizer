@@ -137,18 +137,42 @@ class Drawer:
         return self.fig
     def draw_path(self, vet_f, mim, path, color='darkblue', projection=False, density = 20):
         path = np.array(path)
-        X_scatter = path[:, 0]
-        Y_scatter = path[:, 1]
+        #smooth_len = np.norm(path[-1] - path[0])*density
+        smooth_path = []
+        for i in range(len(path)-1):
+            X_0, X_f = path[i], path[i+1]
+            steps = math.floor(np.linalg.norm(X_f - X_0)*density)
+            for t in range(0,steps):
+                vet = X_0 + (t/steps)*(X_f-X_0)
+                smooth_path.append(list(vet))
+        smooth_path = np.array(smooth_path)
+        X_scatter = smooth_path[:, 0]
+        Y_scatter = smooth_path[:, 1]
         Z_scatter = vet_f(X_scatter, Y_scatter)
-        mark_colors = np.array([0.01*i for i in range(len(X_scatter))])
-        self.fig.add_trace(go.Scatter3d(x=X_scatter, y=Y_scatter, z=Z_scatter,
+
+        X_steps = path[:, 0]
+        Y_steps = path[:, 1]
+        Z_steps = vet_f(X_steps, Y_steps)
+
+        mark_colors = np.array([0.01*i for i in range(len(X_steps))])
+
+        #draw smooth path
+        self.fig.add_trace(go.Scatter3d(x=X_scatter, y=Y_scatter, z=Z_scatter, mode='lines',
+            line=dict(
+                width = 10,
+                color = color
+            ), opacity=0.7)
+        )
+
+        #step markers
+        self.fig.add_trace(go.Scatter3d(x=X_steps, y=Y_steps, z=Z_steps, mode='markers',
             marker=dict(
-                size=3,
+                size=5,
                 color=mark_colors,
                 colorscale='Viridis',
                 opacity=0.8
-            ),
-            line=dict(
+            ))
+        )
         if projection:
             self.fig.add_trace(go.Scatter3d(x=X_scatter, y=Y_scatter, z=np.zeros(X_scatter.shape), mode='lines',
                 line=dict(
