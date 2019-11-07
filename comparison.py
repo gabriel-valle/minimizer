@@ -23,10 +23,11 @@ for i in range(len(methods)):
     mims[i].f_grad = grad_f
     mims[i].f_hess = hess_f
     mims[i].iterate(method=methods[i], log=True)
+    mims[i].iterate(method=methods[i], log=False)
 
 vet_f = np.vectorize(lambda in1, in2: f((in1, in2)))
 drawer = mini.Drawer()
 drawer.draw_f(vet_f, mims[0])
 for i in range(len(methods)):
-    drawer.draw_path(vet_f, mims[i], mims[i].x, color=colors[i])
+    drawer.draw_path(vet_f, mims[i], mims[i].x, color=colors[i], density=20)
 drawer.show()
