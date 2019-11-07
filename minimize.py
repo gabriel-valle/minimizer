@@ -180,6 +180,14 @@ class Drawer:
                     width=10,
                 ), opacity=0.7)
         )
+    def draw_marker(self, vet_f, pos, color='black', symbol_type='square'):
+        pos_z = vet_f(pos[0], pos[1])
+        self.fig.add_trace(go.Scatter3d(x=[pos[0]], y=[pos[1]], z=[pos_z], mode='markers',
+            marker=dict(
+                size=4,
+                color=color,
+                opacity=0.8,
+                symbol=symbol_type
             ))
         )
     def show(self):
