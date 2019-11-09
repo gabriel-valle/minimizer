@@ -108,7 +108,7 @@ class Drawer:
         self.margin = margin
         self.min_dist = min_dist
         self.view_area = None
-    def draw_f(self, vet_f, mim):
+    def draw_f(self, vet_f, mim, name = 'function'):
         xs = list(map(lambda inp: inp[0], mim.x))
         ys = list(map(lambda inp: inp[1], mim.x))
         if self.view_area == None:
@@ -122,13 +122,12 @@ class Drawer:
         Y = np.arange(self.view_area[0][1], self.view_area[1][1]+self.res, self.res)
         X, Y = np.meshgrid(X, Y)
         Z = vet_f(X, Y)
-        surface = go.Figure(data=[go.Surface(x = X, y = Y, z = Z, opacity=0.8)])
+        surface = go.Figure(data=[go.Surface(x = X, y = Y, z = Z, opacity=0.8, showscale=False, name=name, )])
         if self.fig == None:
             self.fig = surface
         else:
             self.fig.data.append(surface.data[0])
         self.fig.update_layout(title='Function', autosize=True,
-                    width=1000, height=1000,
                     margin=dict(l=65, r=50, b=65, t=90))
         return self.fig
     def draw_curve(self, vet_f, mim, X_0, X_f, color='darkblue'):
@@ -152,7 +151,7 @@ class Drawer:
             ))
         )
         return self.fig
-    def draw_path(self, vet_f, mim, path, color='darkblue', projection=False, density = 20):
+    def draw_path(self, vet_f, mim, path, color='darkblue', projection=False, density = 20, name = 'algorithm'):
         path = np.array(path)
         #smooth_len = np.norm(path[-1] - path[0])*density
         smooth_path = []
@@ -178,7 +177,7 @@ class Drawer:
             line=dict(
                 width = 10,
                 color = color
-            ), opacity=0.7)
+            ), opacity=0.7, name=name+' path'),
         )
 
         #step markers
@@ -188,16 +187,16 @@ class Drawer:
                 color=mark_colors,
                 colorscale='Viridis',
                 opacity=0.8
-            ))
+            ), name=name + ' scatter')
         )
         if projection:
             self.fig.add_trace(go.Scatter3d(x=X_scatter, y=Y_scatter, z=np.zeros(X_scatter.shape), mode='lines',
                 line=dict(
                     color=color,
                     width=10,
-                ), opacity=0.7)
+                ), opacity=0.7, showlegend=False)
         )
-    def draw_marker(self, vet_f, pos, color='black', symbol_type='square'):
+    def draw_marker(self, vet_f, pos, color='black', symbol_type='square', name='marker'):
         pos_z = vet_f(pos[0], pos[1])
         self.fig.add_trace(go.Scatter3d(x=[pos[0]], y=[pos[1]], z=[pos_z], mode='markers',
             marker=dict(
@@ -205,7 +204,7 @@ class Drawer:
                 color=color,
                 opacity=0.8,
                 symbol=symbol_type
-            ))
+            ), name=name)
         )
     def show(self):
         self.fig.show()
