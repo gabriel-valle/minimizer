@@ -33,6 +33,8 @@ class Minimizer:
         x = self.x[-1]
         direction = -self.f_grad(x)
         t = self.line_search(direction)
+        if t == -1:
+            return None
         self.steps.append(t*direction)
         self.x.append(self.x[-1]+self.steps[-1])
         return t*direction
@@ -48,7 +50,7 @@ class Minimizer:
         direction = np.linalg.solve(self.B[-1], -self.f_grad(x))
         t = self.line_search(direction)
         if t == -1:
-            return -1
+            return None
         step = t*direction
         self.steps.append(step)
         self.x.append(self.x[-1]+self.steps[-1])
@@ -71,15 +73,15 @@ class Minimizer:
         if method == 'BFGS':
             if len(self.B) == 0:
                 self.B.append(np.identity(self.inputs))
-            self.BFGS_step()
+            st = self.BFGS_step()
         elif method == 'newton':
-            self.newton_step()
+            st = self.newton_step()
         else: # gradient descent is default
-            self.gradient_step()
-        return (self.steps[-1], method)
-    def iterate(self, n=2000, delta=10e-4, method='default', log=False):
-        for _ in range(2000):
-            iter = len(self.x) - 1
+            st = self.gradient_step()
+        return (st, method)
+    def iterate(self, n=5000, delta=10e-4, method='default', log=False):
+        for _ in range(n):
+            #iter = len(self.x) - 1
             x = self.x[-1]
             f_x = self.f(x)
             grad = self.f_grad(x)
@@ -92,7 +94,10 @@ class Minimizer:
             if delta != None and np.linalg.norm(self.f_grad(self.x[-1])) < delta:
                 break
             st = self.step(method=method)
-            print(st)
+            if st[0] is None:
+                print('iteration interrupted')
+                break
+            #print(st)
     def pretty_print(self):
         return pd.DataFrame(self.log, columns=["x", "f(x)", "grad_f(x)", "method"])
 
