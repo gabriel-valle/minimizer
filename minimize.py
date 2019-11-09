@@ -1,6 +1,7 @@
 import numpy as np
 import plotly.graph_objects as go
 import math
+import pandas as pd
 class Minimizer:
     def __init__(self, f, inputs, x_0 = np.array([0,0]), alpha = 0.1):
         self.f = f
@@ -11,6 +12,7 @@ class Minimizer:
         self.steps = []
         self.alpha = alpha
         self.B = []
+        self.log = []
 
     def line_search(self, dr):
         t = 1
@@ -81,11 +83,18 @@ class Minimizer:
             x = self.x[-1]
             f_x = self.f(x)
             grad = self.f_grad(x)
-            print('x_%d = [%f,%f], f(x_%d) = %f, grad_f(x_%d) =' % (iter, round(x[0].item(),4), round(x[1].item(),4), iter, round(f_x, 4), iter), grad)
-            if np.linalg.norm(self.f_grad(self.x[-1])) < delta:
+            if log:
+                self.log.append([list(map(lambda it: round(it, 3), x)), round(f_x, 3), list(map(lambda it: round(it,3),grad)), method])
+                #round_x = map(lambda x: round(x, 4), x)
+                #round_grad = map(lambda x: round(x, 4), grad)
+                #print('k = ',iter,', x = (', *round_x, '), f(x) = ', round(f_x, 4), ', grad_f(x) = (', *round_grad, ')', sep='')
+            #print('x_%d = [%f,%f], f(x_%d) = %f, grad_f(x_%d) =' % (iter, round(x[0].item(),4), round(x[1].item(),4), iter, round(f_x, 4), iter), grad)
+            if delta != None and np.linalg.norm(self.f_grad(self.x[-1])) < delta:
                 break
             st = self.step(method=method)
             print(st)
+    def pretty_print(self):
+        return pd.DataFrame(self.log, columns=["x", "f(x)", "grad_f(x)", "method"])
 
 class Drawer:
     def __init__(self, res = 0.05, margin = 0.2, min_dist = 10e-2):
