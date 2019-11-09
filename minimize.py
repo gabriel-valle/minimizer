@@ -18,8 +18,11 @@ class Minimizer:
         #Armijo condition
         while self.f(x + t*dr) >= self.f(x) + self.alpha*t*np.inner(self.f_grad(x), dr):
             if t == 0:
-                print(dr, self.f(x), self.alpha*t*np.inner(self.f_grad(x), dr))
-                print('line_search failed')
+                #print(dr, self.f(x), self.alpha*t*np.inner(self.f_grad(x), dr))
+                print('line_search failed:')
+                print('x =', *x)
+                print('grad_x =', self.f_grad(x))
+                print('f(x) =', self.f(x))
                 return -1
             t /= 2
         return t
